@@ -55,10 +55,12 @@ class ElementIoTBridge {
 
     do {
       try {
-        $response = $client->request($method, $url, ['json' => $data]);
+        $response = $client->request('GET', $url);
 
         return json_decode($response->getBody()->getContents(), false);
-      } catch (\GuzzleHttp\Exception\ClientException $e) {
+
+      }
+      catch (\GuzzleHttp\Exception\ClientException $e) {
         if ($e->getCode() == 429 && $e->hasResponse()) {
           $response = $e->getResponse();
           
@@ -66,10 +68,12 @@ class ElementIoTBridge {
             usleep(intval($response->getHeader('x-ratelimit-reset')[0]) + 1);
 
           }
-        } else {
-          break;
+          else {
+            break;
+          }
         }
-      } catch (\Exception $e) {
+      } 
+      catch (\Exception $e) {
         break;
       }
       $res = $client->request('GET', $url);
@@ -77,7 +81,7 @@ class ElementIoTBridge {
       $retrieveafter = $res->data->retrieve_after_id;
       array_push($result, $res);
 
-    } while (count($res) == 100 || $tryagain);
+    } while (count($res->data->body) == 100 || $tryagain);
 
     return $result;
   }
