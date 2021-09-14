@@ -59,6 +59,11 @@ class ElementIoTBridge {
 
     do {
       try {
+
+        if ($retrieveafter != '') {
+          $url = $retrieveafter;
+        }
+
         $response = $client->request('GET', $url);
 
         return json_decode($response->getBody()->getContents(), false);
