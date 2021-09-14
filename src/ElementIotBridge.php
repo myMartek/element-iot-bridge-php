@@ -5,6 +5,8 @@ use GuzzleHttp\Client;
 
 class ElementIoTBridge {
   public static function request(String $url, Array $data = null, String $method = 'GET', Array $options = []) {
+    $options = array_merge(['verify' => false], $options);
+
     $client = new Client($options);
 
     if ($data != Null) {
