@@ -16,10 +16,10 @@ final class RequestTest extends TestCase {
       )
     );
 
+    $data = json_decode(json_encode($data));
+
     $res = ElementIoTBridge::request("http://echo.mainova.digital", $data);
 
-    $this->assertIsArray($res);
-    $this->assertNotEmpty($res);
     $this->assertEquals($data, $res);
   }
 
@@ -34,8 +34,7 @@ final class RequestTest extends TestCase {
 
     $res = ElementIoTBridge::request("http://wrongandnotexisting.mainova.digital", $data);
 
-    $this->assertIsArray($res);
-    $this->assertEmpty($res);
+    $this->assertEquals(NULL, $res);
   }
 
   public function testResponseIs200ElementOnServer() {
@@ -61,7 +60,6 @@ final class RequestTest extends TestCase {
 
     $this->assertIsArray($res->body);
     $this->assertEquals($rand ,$res->body[0]->payload->test);
-
   
     # 100 Calls
     for ($i = 0; $i < 100; $i++) { 

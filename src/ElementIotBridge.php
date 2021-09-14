@@ -4,13 +4,17 @@ namespace Mainova;
 use GuzzleHttp\Client;
 
 class ElementIoTBridge {
-  public static function request(String $url, Array $data = null, String $method = 'GET', Array $options = []) {
+  public static function request(String $url, $data = null, String $method = 'GET', Array $options = []) {
     $options = array_merge(['verify' => false], $options);
     
     $client = new Client($options);
 
     if ($data != Null) {
       $method = 'POST';
+
+      if ($data instanceof \stdClass) {
+        $data = json_decode(json_encode($data), true);
+      }
     }
 
     $a = 0;
@@ -19,7 +23,7 @@ class ElementIoTBridge {
       try {
         $response = $client->request($method, $url, ['json' => $data]);
 
-        return json_decode($response->getBody()->getContents(), false);
+        return json_decode($response->getBody()->getContents());
       } catch (\GuzzleHttp\Exception\ConnectException $e) {
         $a++;
 
