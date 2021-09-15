@@ -6,13 +6,15 @@ use GuzzleHttp\Client;
 class ElementIoTBridge {
 
   /**
- * Send a request to Element-IoT with optional HTTP Data body
- * @param {String} url API URL of Element-IoT
- * @param {Object} data Optional POST Data
- * @param {String} method HTTP method to use for the request
- * @param {Array} options Guzzle Client Options used for the request
- * @returns {Object} URL return data or null
- */
+  * Send a request to Element-IoT with optional HTTP Data body
+  *
+  * @static   
+  * @param    {String} url API URL of Element-IoT
+  * @param    {Object} data Optional POST Data
+  * @param    {String} method HTTP method to use for the request
+  * @param    {Array} options Guzzle Client Options used for the request
+  * @return   {Object} URL return data or null
+  */
   public static function request(String $url, $data = null, String $method = 'GET', Array $options = []) {
     $options = array_merge(['verify' => false], $options);
     
@@ -60,10 +62,12 @@ class ElementIoTBridge {
   }
 
   /**
- * Get all data points iterating over all pages
- * @param {String} url API URL of Element-IoT
- * @returns {Array} of data points
- */
+  * Get all data points iterating over all pages
+  * 
+  * @static
+  * @param    {String} url API URL of Element-IoT
+  * @return   {Array} of data points
+  */
   public static function getAll(String $url) {
     $result = [];
     $res = Null;
@@ -106,10 +110,12 @@ class ElementIoTBridge {
   }
 
   /**
- * Get all data points using Element-IoTs Streaming API
- * @param {String} url Stream API URL of Element-IoT
- * @returns {Array} of data points
- */
+  * Get all data points using Element-IoTs Streaming API
+  * 
+  * @static
+  * @param    {String} url Stream API URL of Element-IoT
+  * @return   {Array} of data points
+  */
   public static function getStream(String $url) {
     $result = [];
     $client = new Client(['verify' => false]);
