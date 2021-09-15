@@ -32,7 +32,7 @@ Send a request to Element-IoT with optional HTTP Data body
 | Type | Name | Description |
 | ---- | ---- | ----------- |
 | <code>String</code> | $url  | API URL of Element-IoT |
-| <code></code> | $data  | Optional POST Data |
+| <code>Object</code> | $data  | Optional POST Data |
 | <code>String</code> | $method  | HTTP method to use for the request |
 | <code>array</code> | $options  | Guzzle Client options used for the request |
 
