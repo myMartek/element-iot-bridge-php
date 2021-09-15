@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Mainova\ElementIoTBridge;
 
 final class GetStreamTest extends TestCase {
-
     public function testResponseIsArrayOfJsonData() {
         $after = '2021-07-17T15:00:00.000000';
         $before = '2021-07-14T15:00:00.000000';

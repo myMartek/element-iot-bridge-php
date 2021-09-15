@@ -4,6 +4,24 @@ namespace Mainova;
 use GuzzleHttp\Client;
 
 class ElementIoTBridge {
+  private static function replaceUrlParameters($url = '', $newParams = []) {
+    if($url){
+      $urlArray = parse_url($url);
+      $queryString = $urlArray['query'];
+
+      parse_str($queryString, $queryParams);
+
+      $queryParams = array_merge($queryParams, $newParams);
+
+      $urlArray['query'] = http_build_query($queryParams);
+
+      if(!empty($urlArray)){
+        $url = $urlArray['scheme'].'://'.$urlArray['host'].$urlArray['path'].'?'.$urlArray['query'];
+      }
+    }
+
+    return $url;
+  }
 
   /**
   * Send a request to Element-IoT with optional HTTP Data body
@@ -68,43 +86,47 @@ class ElementIoTBridge {
   * @param    {String} url API URL of Element-IoT
   * @return   {Array} of data points
   */
+  
   public static function getAll(String $url) {
     $result = [];
-    $res = Null;
+    $res = null;
     $tryagain = false;
     $retrieveafter = '';
     $client = new Client(['verify' => false]);
 
     do {
-      try {
-        if ($retrieveafter != '') {
-          $url = $retrieveafter;
-        }
+      $res = null;
+      $tryagain = false;
 
+      $params = [
+        'limit' => 100
+      ];
+
+      if ($retrieveafter != '') {
+        $params['retrieve_after'] = $retrieveafter;
+      }
+
+      $url = ElementIoTBridge::replaceUrlParameters($url, $params);
+
+      try {
         $response = $client->request('GET', $url);
 
-        return json_decode($response->getBody()->getContents(), false);
+        $res = json_decode($response->getBody()->getContents(), false);
+
+        $retrieveafter = $res->retrieve_after_id;
+        $result = array_merge($result, $res->body);
       } catch (\GuzzleHttp\Exception\ClientException $e) {
         if ($e->getCode() == 429 && $e->hasResponse()) {
           $response = $e->getResponse();
           
           if ($response->hasHeader('x-ratelimit-reset')) {
             usleep(intval($response->getHeader('x-ratelimit-reset')[0]) + 1);
-          } else {
-            break;
+
+            $tryagain = true;
           }
-        } else {
-          break;
         }
-      } catch (\Exception $e) {
-        break;
-      }
-
-      $res = $client->request('GET', $url);
-
-      $retrieveafter = $res->data->retrieve_after_id;
-      array_push($result, $res);
-    } while (count($res->data->body) == 100 || $tryagain);
+      } catch (\Exception $e) {}
+    } while ($tryagain || ($res && $res->body && count($res->body) == 100));
 
     return $result;
   }
