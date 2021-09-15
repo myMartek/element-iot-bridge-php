@@ -1,3 +1,5 @@
 vendor/
 .vscode/
 coverage/
+docs/
+.phpdoc/

@@ -15,7 +15,7 @@ class ElementIoTBridge {
   * @param    {Array} options Guzzle Client Options used for the request
   * @return   {Object} URL return data or null
   */
-  public static function request(String $url, $data = null, String $method = 'GET', Array $options = []) {
+  public static function request(String $url, $data = null, String $method = "GET", Array $options = []) {
     $options = array_merge(['verify' => false], $options);
     
     $client = new Client($options);
