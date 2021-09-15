@@ -23,7 +23,7 @@ final class RequestTest extends TestCase {
     $this->assertEquals($data, $res);
   }
 
-  public function testResponseIsEmptyWrongURL() {
+  public function testResponseIsEmptyWrongUrl() {
     $data = array(
       "type" => 'Animal',
       "props" => array (
@@ -87,7 +87,7 @@ final class RequestTest extends TestCase {
     }
   }
 
-  public function testResponseIsNullWrongURL() {
+  public function testResponseIsNullWrongUrl() {
     $rand = random_int(0, 10000);
     $data =array ( "type" => 'create_packet',
       "opts" => array(
