@@ -25,5 +25,14 @@ steps:
 - script: composer install --no-interaction --prefer-dist
   displayName: 'composer install'
   
-- script: ./vendor/bin/phpunit --testdox tests
+- script: ./vendor/bin/phpunit --testdox --log-junit=TEST-unit.xml tests
   displayName: Tests
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
+    failTaskOnFailedTests: true
+    testRunTitle: 'Tests'
+  condition: succeededOrFailed()
+  displayName: 'Publish test results'

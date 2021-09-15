@@ -3,3 +3,4 @@ vendor/
 coverage/
 docs/
 .phpdoc/
+TEST-unit.xml
