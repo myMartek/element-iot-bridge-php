@@ -143,6 +143,8 @@ class ElementIoTBridge {
     $client = new Client(['verify' => false]);
 
     try {
+      $url = ElementIoTBridge::replaceUrlParameters($url, ["timeout" => 1000 * 3 * 60]);
+
       $res = $client->request('GET', $url);
 
       $result = explode('\n', $res->getBody()->getContents());
