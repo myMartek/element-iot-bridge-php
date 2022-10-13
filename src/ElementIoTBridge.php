@@ -26,7 +26,7 @@ class ElementIoTBridge {
   /**
   * Send a request to Element-IoT with optional HTTP Data body
   *
-  * @static   
+  * @static
   * @param    {String} url API URL of Element-IoT
   * @param    {Object} data Optional POST Data
   * @param    {String} method HTTP method to use for the request
@@ -35,11 +35,13 @@ class ElementIoTBridge {
   */
   public static function request(String $url, $data = null, String $method = "GET", Array $options = []) {
     $options = array_merge(['verify' => false], $options);
-    
+
     $client = new Client($options);
 
-    if ($data != Null) {
-      $method = 'POST';
+    if ($data !== null && $method === "GET") {
+      if ($method === "GET") {
+        $method = 'POST';
+      }
 
       if ($data instanceof \stdClass) {
         $data = json_decode(json_encode($data), true);
@@ -60,9 +62,10 @@ class ElementIoTBridge {
 
         continue;
       } catch (\GuzzleHttp\Exception\ClientException $e) {
+        dd($e);
         if ($e->getCode() == 429 && $e->hasResponse()) {
           $response = $e->getResponse();
-          
+
           if ($response->hasHeader('x-ratelimit-reset')) {
             usleep(intval($response->getHeader('x-ratelimit-reset')[0]) + 1);
 
@@ -81,12 +84,12 @@ class ElementIoTBridge {
 
   /**
   * Get all data points iterating over all pages
-  * 
+  *
   * @static
   * @param    {String} url API URL of Element-IoT
   * @return   {Array} of data points
   */
-  
+
   public static function getAll(String $url) {
     $result = [];
     $res = null;
@@ -118,7 +121,7 @@ class ElementIoTBridge {
       } catch (\GuzzleHttp\Exception\ClientException $e) {
         if ($e->getCode() == 429 && $e->hasResponse()) {
           $response = $e->getResponse();
-          
+
           if ($response->hasHeader('x-ratelimit-reset')) {
             usleep(intval($response->getHeader('x-ratelimit-reset')[0]) + 1);
 
@@ -133,7 +136,7 @@ class ElementIoTBridge {
 
   /**
   * Get all data points using Element-IoTs Streaming API
-  * 
+  *
   * @static
   * @param    {String} url Stream API URL of Element-IoT
   * @return   {Array} of data points
@@ -143,8 +146,6 @@ class ElementIoTBridge {
     $client = new Client(['verify' => false]);
 
     try {
-      $url = ElementIoTBridge::replaceUrlParameters($url, ["timeout" => 1000 * 3 * 60]);
-
       $res = $client->request('GET', $url);
 
       $result = explode('\n', $res->getBody()->getContents());
@@ -155,7 +156,7 @@ class ElementIoTBridge {
     } catch (\GuzzleHttp\Exception\ClientException $e) {
       if ($e->getCode() == 429 && $e->hasResponse()) {
         $response = $e->getResponse();
-        
+
         if ($response->hasHeader('x-ratelimit-reset')) {
           usleep(intval($response->getHeader('x-ratelimit-reset')[0]) + 1);
 
