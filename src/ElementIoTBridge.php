@@ -38,7 +38,7 @@ class ElementIoTBridge {
 
     $client = new Client($options);
 
-    if ($data !== null && $method === "GET") {
+    if ($data !== null) {
       if ($method === "GET") {
         $method = 'POST';
       }
