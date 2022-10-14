@@ -62,7 +62,6 @@ class ElementIoTBridge {
 
         continue;
       } catch (\GuzzleHttp\Exception\ClientException $e) {
-        dd($e);
         if ($e->getCode() == 429 && $e->hasResponse()) {
           $response = $e->getResponse();
 
